@@ -1,37 +1,31 @@
-import java.io.*;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
-public class filecopier {
-
+public class FileCopy {
     public static void main(String[] args) {
+        String sourceFile = "source.txt";
+        String destinationFile = "destination.txt";
+
         try {
-            // Source file path
-            String sourceFilePath = "source.txt"; 
-            // Destination file path
-            String destinationFilePath = "destination.txt"; 
+            FileInputStream inputStream = new FileInputStream(sourceFile);
+            
+            FileOutputStream outputStream = new FileOutputStream(destinationFile);
 
-            // Create input stream from source file
-            FileInputStream inputStream = new FileInputStream(sourceFilePath);
-
-            // Create output stream to destination file
-            FileOutputStream outputStream = new FileOutputStream(destinationFilePath);
-
-            // Buffer for efficient copying
-            byte[] buffer = new byte[1024]; 
+            byte[] buffer = new byte[1024];  
             int bytesRead;
 
-            // Read data from source and write to destination
             while ((bytesRead = inputStream.read(buffer)) != -1) {
                 outputStream.write(buffer, 0, bytesRead);
             }
 
-            // Close streams to release resources
             inputStream.close();
             outputStream.close();
 
             System.out.println("File copied successfully!");
 
         } catch (IOException e) {
-            System.err.println("Error copying file: " + e.getMessage());
+            System.err.println("An error occurred while copying the file: " + e.getMessage());
         }
     }
 }
