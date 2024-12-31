@@ -1,52 +1,47 @@
 import java.util.Scanner;
-
-public class binarysearch {
-
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-
-        System.out.print("Enter the number of elements: ");
-        int n = sc.nextInt();
-
-        int[] arr = new int[n];
-
-        System.out.println("Enter the elements (in sorted order):");
-        for (int i = 0; i < n; i++) {
-            arr[i] = sc.nextInt();
+import java.util.Arrays;  
+public class BinarySearch {
+    public static int binarySearch(int[] arr, int key) {
+        int left = 0;
+        int right = arr.length - 1;
+        while (left <= right) {
+            int mid = left + (right - left) /2;
+            if (arr[mid] == key) {
+                return mid;  // Return the index if found
+            }
+            if (arr[mid] > key) {
+                right = mid - 1;
+            }
+            else {
+                left = mid + 1;
+            }
         }
-
-        System.out.print("Enter the element to search: ");
-        int x = sc.nextInt();
-
-        int result = binarySearch(arr, 0, n - 1, x);
+        return -1;  // Return -1 if not found
+    }
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter number of elements:");
+        int n = scanner.nextInt();
+        int[] arr = new int[n];
+        System.out.println("Enter the elements:");
+        for (int i = 0; i < n; i++) {
+            arr[i] = scanner.nextInt();
+        }
+        Arrays.sort(arr); 
+        System.out.println("Sorted array: ");
+        for (int num : arr) {
+            System.out.print(num + " ");
+        }
+        System.out.println();
+        System.out.println("Enter the element to search for:");
+        int key = scanner.nextInt();
+        int result = binarySearch(arr, key); 
         if (result == -1) {
-            System.out.println("Element not found");
+            System.out.println("Element not found.");
         } else {
             System.out.println("Element found at index " + result);
         }
-    }
 
-    public static int binarySearch(int[] arr, int low, int high, int x) {
-        if (high >= low) {
-            int mid = low + (high - low) / 2;
-
-            // If the element is present at the middle
-            if (arr[mid] == x) {
-                return mid;
-            }
-
-            // If element is smaller than mid, then it can only
-            // be present in left subarray
-            if (arr[mid] > x) {
-                return binarySearch(arr, low, mid - 1, x);
-            }
-
-            // Else the element can only be present in right subarray
-            return binarySearch(arr, mid + 1, high, x);
-        }
-
-        // We reach here when the element is not present
-        // in array
-        return -1;
+        scanner.close();
     }
 }
