@@ -51,3 +51,9 @@ class DFS
         DFS(adj, source); 
     }
 }
+
+
+        OUTPUT
+DFS from source: 1
+            1 2 0 3 4 
+            
