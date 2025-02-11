@@ -30,3 +30,6 @@ class BFS
 		bfs(adj,0);
 	}
 }
+
+OUTPUT
+	0 1 2 3 4
