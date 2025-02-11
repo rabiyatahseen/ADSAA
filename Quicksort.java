@@ -53,3 +53,13 @@ public class Quicksort
  		scanner.close();
  	}
 }
+
+
+
+OUTPUT
+	Enter the number of elements in the array:
+	4
+	Enter the elements of the array:
+	9 6 3 1
+	Sorted Array:
+	1 3 6 9 
