@@ -44,3 +44,10 @@ class BFS_AL
 		bfs(adj, 4);
 	}
 }
+
+
+output
+	BFS starting from 0:
+	4 1 2 0 3 
+	
+	
