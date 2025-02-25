@@ -174,3 +174,302 @@ class Graph {
 
 
 
+
+
+
+/*Single source shortest path using greedy method when the graph is represented by adjacency list*/
+
+import java.io.*;
+import java.util.*;
+ 
+class GFG {
+    static class AdjListNode {
+        int vertex, weight;
+ 
+        AdjListNode(int v, int w)
+        {
+            vertex = v;
+            weight = w;
+        }
+        int getVertex() { return vertex; }
+        int getWeight() { return weight; }
+    }
+ 
+    // Function to find the shortest distance of all the
+    // vertices from the source vertex S.
+    public static int[] dijkstra(
+        int V, ArrayList<ArrayList<AdjListNode> > graph,
+        int src)
+    {
+        int[] distance = new int[V];
+        for (int i = 0; i < V; i++)
+            distance[i] = Integer.MAX_VALUE;
+        distance[src] = 0;
+ 
+        PriorityQueue<AdjListNode> pq = new PriorityQueue<>(
+            (v1, v2) -> v1.getWeight() - v2.getWeight());
+        pq.add(new AdjListNode(src, 0));
+ 
+        while (pq.size() > 0) {
+            AdjListNode current = pq.poll();
+ 
+            for (AdjListNode n :
+                 graph.get(current.getVertex())) {
+                if (distance[current.getVertex()]
+                        + n.getWeight()
+                    < distance[n.getVertex()]) {
+                    distance[n.getVertex()]
+                        = n.getWeight()
+                          + distance[current.getVertex()];
+                    pq.add(new AdjListNode(
+                        n.getVertex(),
+                        distance[n.getVertex()]));
+                }
+            }
+        }
+        // If you want to calculate distance from source to
+        // a particular target, you can return
+        // distance[target]
+        return distance;
+    }
+ 
+    public static void main(String[] args)
+    {
+        int V = 9;
+        ArrayList<ArrayList<AdjListNode> > graph
+            = new ArrayList<>();
+        for (int i = 0; i < V; i++) {
+            graph.add(new ArrayList<>());
+        }
+        int source = 0;
+        graph.get(0).add(new AdjListNode(1, 4));
+        graph.get(0).add(new AdjListNode(7, 8));
+        graph.get(1).add(new AdjListNode(2, 8));
+        graph.get(1).add(new AdjListNode(7, 11));
+        graph.get(1).add(new AdjListNode(0, 7));
+        graph.get(2).add(new AdjListNode(1, 8));
+        graph.get(2).add(new AdjListNode(3, 7));
+        graph.get(2).add(new AdjListNode(8, 2));
+        graph.get(2).add(new AdjListNode(5, 4));
+        graph.get(3).add(new AdjListNode(2, 7));
+        graph.get(3).add(new AdjListNode(4, 9));
+        graph.get(3).add(new AdjListNode(5, 14));
+        graph.get(4).add(new AdjListNode(3, 9));
+        graph.get(4).add(new AdjListNode(5, 10));
+        graph.get(5).add(new AdjListNode(4, 10));
+        graph.get(5).add(new AdjListNode(6, 2));
+        graph.get(6).add(new AdjListNode(5, 2));
+        graph.get(6).add(new AdjListNode(7, 1));
+        graph.get(6).add(new AdjListNode(8, 6));
+        graph.get(7).add(new AdjListNode(0, 8));
+        graph.get(7).add(new AdjListNode(1, 11));
+        graph.get(7).add(new AdjListNode(6, 1));
+        graph.get(7).add(new AdjListNode(8, 7));
+        graph.get(8).add(new AdjListNode(2, 2));
+        graph.get(8).add(new AdjListNode(6, 6));
+        graph.get(8).add(new AdjListNode(7, 1));
+ 
+        int[] distance = dijkstra(V, graph, source);
+        // Printing the Output
+        System.out.println("Vertex  "
+                           + "  Distance from Source");
+        for (int i = 0; i < V; i++) {
+            System.out.println(i + "             "
+                               + distance[i]);
+        }
+    }
+}
+
+
+/*Single source shortest path using greedy method when the graph is represented by adjacency matrix*/
+
+import java.io.*;
+import java.lang.*;
+import java.util.*;
+
+
+class ShortestPath {
+    // A utility function to find the vertex with minimum
+    // distance value, from the set of vertices not yet
+    // included in shortest path tree
+    static final int V = 9;
+    int minDistance(int dist[], Boolean sptSet[])
+    {
+        // Initialize min value
+        int min = Integer.MAX_VALUE, min_index = -1;
+
+
+        for (int v = 0; v < V; v++)
+            if (sptSet[v] == false && dist[v] <= min) {
+                min = dist[v];
+                min_index = v;
+            }
+
+
+        return min_index;
+    }
+
+
+    // A utility function to print the constructed distance
+    // array
+    void printSolution(int dist[])
+    {
+        System.out.println(
+            "Vertex \t\t Distance from Source");
+        for (int i = 0; i < V; i++)
+            System.out.println(i + " \t\t " + dist[i]);
+    }
+
+
+    // Function that implements Dijkstra's single source
+    // shortest path algorithm for a graph represented using
+    // adjacency matrix representation
+    void dijkstra(int graph[][], int src)
+    {
+        int dist[] = new int[V]; // The output array.
+                                 // dist[i] will hold
+        // the shortest distance from src to i
+
+
+        // sptSet[i] will true if vertex i is included in
+        // shortest path tree or shortest distance from src
+        // to i is finalized
+        Boolean sptSet[] = new Boolean[V];
+
+
+        // Initialize all distances as INFINITE and stpSet[]
+        // as false
+        for (int i = 0; i < V; i++) {
+            dist[i] = Integer.MAX_VALUE;
+            sptSet[i] = false;
+        }
+
+
+        // Distance of source vertex from itself is always 0
+        dist[src] = 0;
+
+
+        // Find shortest path for all vertices
+        for (int count = 0; count < V - 1; count++) {
+            // Pick the minimum distance vertex from the set
+            // of vertices not yet processed. u is always
+            // equal to src in first iteration.
+            int u = minDistance(dist, sptSet);
+
+
+            // Mark the picked vertex as processed
+            sptSet[u] = true;
+
+
+            // Update dist value of the adjacent vertices of
+            // the picked vertex.
+            for (int v = 0; v < V; v++)
+
+
+                // Update dist[v] only if is not in sptSet,
+                // there is an edge from u to v, and total
+                // weight of path from src to v through u is
+                // smaller than current value of dist[v]
+                if (!sptSet[v] && graph[u][v] != 0
+                    && dist[u] != Integer.MAX_VALUE
+                    && dist[u] + graph[u][v] < dist[v])
+                    dist[v] = dist[u] + graph[u][v];
+        }
+
+
+        // print the constructed distance array
+        printSolution(dist);
+    }
+
+
+    // Driver's code
+    public static void main(String[] args)
+    {
+        /* Let us create the example graph discussed above
+         */
+        int graph[][]
+            = new int[][] { { 0, 4, 0, 0, 0, 0, 0, 8, 0 },
+                            { 4, 0, 8, 0, 0, 0, 0, 11, 0 },
+                            { 0, 8, 0, 7, 0, 4, 0, 0, 2 },
+                            { 0, 0, 7, 0, 9, 14, 0, 0, 0 },
+                            { 0, 0, 0, 9, 0, 10, 0, 0, 0 },
+                            { 0, 0, 4, 14, 10, 0, 2, 0, 0 },
+                            { 0, 0, 0, 0, 0, 2, 0, 1, 6 },
+                            { 8, 11, 0, 0, 0, 0, 1, 0, 7 },
+                            { 0, 0, 2, 0, 0, 0, 6, 7, 0 } };
+        ShortestPath t = new ShortestPath();
+
+
+        // Function call
+        t.dijkstra(graph, 0);
+    }
+}
+
+
+/* Job sequencing with deadlines using Greedy method*/
+import java.util.*;
+
+
+class GfG {
+
+
+    static ArrayList<Integer> jobSequencing(int[] id, 
+            int[] deadline, int[] profit) {
+        int n = id.length;
+        ArrayList<Integer> ans = new ArrayList<>(Arrays.asList(0, 0));
+
+
+        // pair the profit and deadline of
+        // all the jobs together
+        ArrayList<int[]> jobs = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            jobs.add(new int[]{profit[i], deadline[i]});
+        }
+
+
+        // sort the jobs based on profit
+        // in decreasing order
+        jobs.sort((a, b) -> b[0] - a[0]);
+
+
+        // array to store result of job sequence
+        int[] result = new int[n];
+        Arrays.fill(result, -1);
+
+
+        for (int i = 0; i < n; i++) {
+            int start = Math.min(n, jobs.get(i)[1]) - 1;
+            for (int j = start; j >= 0; j--) {
+
+
+                // if slot is empty
+                if (result[j] == -1) {
+                    result[j] = i;
+                    break;
+                }
+            }
+        }
+
+
+        for (int i = 0; i < n; i++) {
+            if (result[i] != -1) {
+                ans.set(1, ans.get(1) + jobs.get(result[i])[0]);
+                ans.set(0, ans.get(0) + 1);
+            }
+        }
+
+
+        return ans;
+    }
+
+
+    public static void main(String[] args) {
+        int[] id = {1, 2, 3, 4, 5};
+        int[] deadline = {2, 1, 2, 1, 1};
+        int[] profit = {100, 19, 27, 25, 15};
+        ArrayList<Integer> ans = jobSequencing(id, deadline, profit);
+        System.out.println(ans.get(0) + " " + ans.get(1));
+    }
+}
+
+
